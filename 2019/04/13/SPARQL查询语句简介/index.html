@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="SPARQL,Jena,知识图谱,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近学习了一点是指图谱相关的内容，其中对RDF数据的查询最常用的就是SPARQL了，简单的学习了一下它的语言，和SQL语句类似。">
+<meta name="keywords" content="SPARQL,Jena,知识图谱">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SPARQL语句查询">
+<meta property="og:url" content="http://yoursite.com/2019/04/13/SPARQL查询语句简介/index.html">
+<meta property="og:site_name" content="April">
+<meta property="og:description" content="最近学习了一点是指图谱相关的内容，其中对RDF数据的查询最常用的就是SPARQL了，简单的学习了一下它的语言，和SQL语句类似。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-04-13T10:27:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SPARQL语句查询">
+<meta name="twitter:description" content="最近学习了一点是指图谱相关的内容，其中对RDF数据的查询最常用的就是SPARQL了，简单的学习了一下它的语言，和SQL语句类似。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/04/13/SPARQL查询语句简介/">
+
+
+
+
+
+  <title>SPARQL语句查询 | April</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">April</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-music">
+          <a href="/music/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-music"></i> <br>
+            
+            音乐
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-love">
+          <a href="/love/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br>
+            
+            李玥
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/13/SPARQL查询语句简介/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="morning sunflowers">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/lj.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="April">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SPARQL语句查询</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-13T18:23:05+08:00">
+                2019-04-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/知识图谱/" itemprop="url" rel="index">
+                    <span itemprop="name">知识图谱</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.7k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  18 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近学习了一点是指图谱相关的内容，其中对RDF数据的查询最常用的就是SPARQL了，简单的学习了一下它的语言，和SQL语句类似。<br><a id="more"></a></p>
+<h3 id="匹配查询：查询RDF图数据中既包含名字也包含邮箱的人"><a href="#匹配查询：查询RDF图数据中既包含名字也包含邮箱的人" class="headerlink" title="匹配查询：查询RDF图数据中既包含名字也包含邮箱的人"></a>匹配查询：查询RDF图数据中既包含名字也包含邮箱的人</h3><p><strong><em>Data：</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt;.</span><br><span class="line"></span><br><span class="line">_:a  foaf:name  ”Johnny Lee Outlaw“.</span><br><span class="line"></span><br><span class="line">_:a  foaf:mbox   &quot;&lt;mailto:jlow@example.com&gt;&quot;.</span><br><span class="line"></span><br><span class="line">_:b  foaf:name  ”Peter Googguy“.</span><br><span class="line"></span><br><span class="line">_:a  foaf:mbox   &quot;&lt;mailto:peter@example.org&gt;&quot;. </span><br><span class="line"></span><br><span class="line">_:c  foaf:mbox   &quot;&lt;mailto:carol@example.org&gt;&quot;.</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;</span><br><span class="line"></span><br><span class="line">SELECT ?name ?mbox</span><br><span class="line"></span><br><span class="line">WHERE</span><br><span class="line"></span><br><span class="line">&#123;?x foaf:name ?name .</span><br><span class="line"></span><br><span class="line"> ?x foaf:mbox  ?mbox&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>mbox</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“Johnny Lee Outlaw”</td>
+<td>“<a href="mailto:jlow@example.com" target="_blank" rel="noopener">mailto:jlow@example.com</a>“</td>
+</tr>
+<tr>
+<td>“Peter Googguy”</td>
+<td>mailto:<a href="mailto:peter@example.org" target="_blank" rel="noopener">peter@example.org</a></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="具有数据类型限制的查询"><a href="#具有数据类型限制的查询" class="headerlink" title="具有数据类型限制的查询"></a>具有数据类型限制的查询</h3><p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@prefix dt:     &lt;http://example.org/datatype#&gt;.</span><br><span class="line"></span><br><span class="line">@prefix ns:     &lt;http://example.org//ns#&gt;</span><br><span class="line"></span><br><span class="line">@prefix :       &lt;http://example.org/ns#&gt;</span><br><span class="line"></span><br><span class="line">@prefix xsd:  &lt;http://www.w3.org/2001/XMLSchema#&gt;.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">:x   ns:p  &quot;cat&quot;@en.</span><br><span class="line"></span><br><span class="line">:y   ns:p   &quot;42&quot;^^xsd:integer .</span><br><span class="line"></span><br><span class="line">:z   ns:p    &quot;abc&quot;^^dt:specialDatatype</span><br></pre></td></tr></table></figure>
+<p>其中”cat”是RDF数据内容，@en是该内容的一个类型标记；</p>
+<p>同理下面的整形 和specialDatatype为一个带有数据类型<a href="http://example.org/datatype#specialDatatype的类型化文字。" target="_blank" rel="noopener">http://example.org/datatype#specialDatatype的类型化文字。</a></p>
+<p>在具有数据标记的RDF数据中如果不带类型是查询不到的，例如：</p>
+<p><code>SELECT ?v WHERE{?v ?p &quot;cat&quot;}</code></p>
+<p>正确的查询方法为：</p>
+<p><code>SELECT ?v WHERE {?v ?p &quot;cat&quot;@en}</code></p>
+<table>
+<thead>
+<tr>
+<th>v</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://example.org//ns#x" target="_blank" rel="noopener">http://example.org//ns#x</a></td>
+</tr>
+</tbody>
+</table>
+<p><code>SELECT ?v WHERE {?v ?p 42}</code></p>
+<table>
+<thead>
+<tr>
+<th>v</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://example.org/ns#y" target="_blank" rel="noopener">http://example.org/ns#y</a></td>
+</tr>
+</tbody>
+</table>
+<p><code>SELECT ?v WHERE {?v ?p &quot;abc&quot;^^&lt;http://example.org/datatype#specialDatatype&gt;}</code></p>
+<table>
+<thead>
+<tr>
+<th>v</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://example.org/ns#z" target="_blank" rel="noopener">http://example.org/ns#z</a></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="空白节点标签的查询"><a href="#空白节点标签的查询" class="headerlink" title="空白节点标签的查询"></a>空白节点标签的查询</h3><p>查询结果可以包含空白节点，本文档中示例结果集中的空白节点“_：”形式编写，后跟空白节点标签。</p>
+<p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@prefix foaf:   &lt;http://xmlns.com/foaf/0.1&gt; .</span><br><span class="line"></span><br><span class="line">_:a  foaf:name   &quot;Alcie&quot;</span><br><span class="line">_:b  foaf:name   &quot;Bob&quot;</span><br></pre></td></tr></table></figure>
+<p><em>Tips:注意这里的空白节点和前面的空白前缀不同</em></p>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">PREFIX foaf:    &lt;http://xmlns.com/foaf/0.1/&gt;</span><br><span class="line">SELECT ?x ?name</span><br><span class="line">WHERE &#123;?x foaf:name ?name&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>x</th>
+<th>name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_:c</td>
+<td>“Alice”</td>
+</tr>
+<tr>
+<td>_:d</td>
+<td>“Bob”</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="查询语句的返回结果使用表达式拼接"><a href="#查询语句的返回结果使用表达式拼接" class="headerlink" title="查询语句的返回结果使用表达式拼接"></a>查询语句的返回结果使用表达式拼接</h3><p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@prefix  foaf:   &lt;http://xmlns.com/foaf/0.1/&gt;</span><br><span class="line"></span><br><span class="line">_:a  foaf:givenName   &quot;John&quot; .</span><br><span class="line">_:a  foaf:surname  &quot;Doe&quot; .</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PREFIX foaf:   &lt;http://xmlns.com/foaf/0.1/&gt;</span><br><span class="line">SELECT ?name</span><br><span class="line">WHERE &#123;</span><br><span class="line">    ?P foaf:givenName ?G  ;</span><br><span class="line">       foaf:surname  ?S  </span><br><span class="line">       BIND(CONCAT(?G,&quot; &quot;,?S) AS ?name)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“John Doe”</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="通过用正则化的方式来匹配查询某一结果"><a href="#通过用正则化的方式来匹配查询某一结果" class="headerlink" title="通过用正则化的方式来匹配查询某一结果"></a>通过用正则化的方式来匹配查询某一结果</h3><p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@prefix dc:   &lt;http://purl.org/dc/elements/1.1/&gt; .</span><br><span class="line">@prefix :     &lt;http://example.org/book/&gt; .</span><br><span class="line">@prefic ns:   &lt;http://example.org/ns#&gt; .</span><br><span class="line"></span><br><span class="line">:book1 dc:title  &quot;SPARQL Tutorial&quot; .</span><br><span class="line">:book1 ns:price  42 .</span><br><span class="line">:book2 dc:title  &quot;The Semantic Web&quot; .</span><br><span class="line">:book2 ns:price  23 .</span><br></pre></td></tr></table></figure>
+<p> <strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PREFIX dc:  &lt;http://purl.org/dc/elements/1.1/&gt;</span><br><span class="line">SELECT ?title</span><br><span class="line">WHERE  &#123;</span><br><span class="line">    ?x dc:title ?title</span><br><span class="line">    FILTER regex(?title,&quot;SPARQL&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>title</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“SPARQL Tutorial”</td>
+</tr>
+</tbody>
+</table>
+<p>其中FILTER regex内的为正则表达式。</p>
+<hr>
+<h3 id="通过FILTER来做算术运算的限制操作"><a href="#通过FILTER来做算术运算的限制操作" class="headerlink" title="通过FILTER来做算术运算的限制操作"></a>通过FILTER来做算术运算的限制操作</h3><p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@prefix dc:   &lt;http://purl.org/dc/elements/1.1/&gt; .</span><br><span class="line">@prefix :     &lt;http://example.org/book/&gt; .</span><br><span class="line">@prefic ns:   &lt;http://example.org/ns#&gt; .</span><br><span class="line"></span><br><span class="line">:book1 dc:title  &quot;SPARQL Tutorial&quot; .</span><br><span class="line">:book1 ns:price  42 .</span><br><span class="line">:book2 dc:title  &quot;The Semantic Web&quot; .</span><br><span class="line">:book2 ns:price  23 .</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PREFIX dc: &lt;http://purl.org/dc/elements/1.1/&gt;</span><br><span class="line">PREFIX ns: &lt;http://example.org/ns#&gt;</span><br><span class="line">SELECT ?title ?price </span><br><span class="line">WHERE &#123;</span><br><span class="line">    ?x ns:price ?price .</span><br><span class="line">    FILTER (?price &lt; 30.5)</span><br><span class="line">    ?x dc:title ?title .</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>title</th>
+<th>price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“The Semantic Web”</td>
+<td>23</td>
+</tr>
+</tbody>
+</table>
+<p><em>Tips:通过约束变量，只有第二本书与之匹配。达到过滤的要求，其实FILTER可以放在?title .  的下面</em>.</p>
+<hr>
+<h3 id="符号说明"><a href="#符号说明" class="headerlink" title="符号说明"></a>符号说明</h3><p>如果SPARQL中三元组查询模式共享一个宾语，那么可以用 逗号“，”来进行表示</p>
+<p><code>?x foaf:nick  &quot;Alice&quot;,&quot;Alice_&quot;</code></p>
+<p>等同于</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?x  foaf:nick &quot;Alice&quot; .</span><br><span class="line">?x  foaf:nick &quot;Alice_&quot; .</span><br></pre></td></tr></table></figure>
+<p>如果查询三元组里共享一个主语那么，可以用分号来表示“；”</p>
+<p><code>?x foaf:name ?name;foaf:nick &quot;Alice&quot;,&quot;Alice_&quot;</code></p>
+<p>等同于</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">?x foaf:name ?name .</span><br><span class="line">?x foaf:nick &quot;Alice&quot; .</span><br><span class="line">?x foaf:nick &quot;Alice_&quot; .</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="组图模式"><a href="#组图模式" class="headerlink" title="组图模式"></a>组图模式</h3><p>在SPARQL查询字符串中，组图模式使用大括号进行分隔：{}。 例如，此查询的查询模式是一个基本图形模式的组图模式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PREFIX foaf:   &lt;http://xmlns.com/faof/0.1/&gt;</span><br><span class="line">SELECT ?name ?mbox</span><br><span class="line">WHERE  &#123;</span><br><span class="line">    ?x foaf:name ?name .</span><br><span class="line">    ?x foaf:mbox ?mbox .</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从将三重模式分组为两个基本图形模式的查询中可以获得相同的解决方案。 例如，下面的查询具有不同的结构，但会产生与上一个查询相同的解决方案：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PREFIX foaf:  &lt;http://xmlns.com/foaf/0.1/&gt;</span><br><span class="line">SELECT ?name ?mbox</span><br><span class="line">WHERE  &#123;&#123;?x foaf:name ?name .&#125;</span><br><span class="line">    &#123;?x foaf:mbox ?mbox .&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="Optional–考虑的限制关系"><a href="#Optional–考虑的限制关系" class="headerlink" title="Optional–考虑的限制关系"></a>Optional–考虑的限制关系</h3><p>OPTIONAL为考虑的限制关系，用于加入一个即使没有绑定任何关系，也不会过滤掉该元素。有点类似关系里的或。</p>
+<p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@prefix foaf:   &lt;http://xmlns.com/foaf/0.1/&gt; .</span><br><span class="line">@prefix rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .</span><br><span class="line"></span><br><span class="line">_:a  rdf:type  foaf:Person .</span><br><span class="line">_:a  foaf:name &quot;Alice&quot; .</span><br><span class="line">_:a  foaf:mbox &lt;mailto:alice@example.com&gt; .</span><br><span class="line">_:a  foaf:mbox &lt;mailto:alice@work.example&gt; .</span><br><span class="line"></span><br><span class="line">_:b  rdf:type  foaf:Person .</span><br><span class="line">_:b  foaf:name &quot;Bob&quot; .</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;</span><br><span class="line">SELECT ?name ?mbox</span><br><span class="line">WHERE &#123;</span><br><span class="line">    ?x foaf:name ?name .</span><br><span class="line">    OPTIONAL &#123;?x foaf:mbox ?mbox&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“Alice”</td>
+<td><a href="mailto:alice@example.com" target="_blank" rel="noopener">mailto:alice@example.com</a></td>
+</tr>
+<tr>
+<td>“Alice”</td>
+<td><a href="mailto:alice@work.example" target="_blank" rel="noopener">mailto:alice@work.example</a></td>
+</tr>
+<tr>
+<td>“Bob”</td>
+</tr>
+</tbody>
+</table>
+<p>即使OPTIONAL中限制得由mbox的值的元素，在Bob中没有mbox，那么也会输出该数据。</p>
+<p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@prefix dc:   &lt;http://purl.org/dc/elements/1.1/&gt; .</span><br><span class="line">@prefix :     &lt;http://example.org/book/&gt; .</span><br><span class="line">@prefic ns:   &lt;http://example.org/ns#&gt; .</span><br><span class="line"></span><br><span class="line">:book1 dc:title  &quot;SPARQL Tutorial&quot; .</span><br><span class="line">:book1 ns:price  42 .</span><br><span class="line">:book2 dc:title  &quot;The Semantic Web&quot; .</span><br><span class="line">:book2 ns:price  23 .</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PREFIX dc:  &lt;http://purl.org/dc/elements/1.1/&gt;</span><br><span class="line">PREFIX ns:  &lt;http://example.org/ns#&gt;</span><br><span class="line">SELECT  ?title  ?price</span><br><span class="line">WHERE &#123;</span><br><span class="line">    ?x dc:title  ?title .</span><br><span class="line">    OPTIONAL&#123; ?x ns:price ?price . FILTER (?price &lt; 30)&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>title</th>
+<th>price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“SPARQL Tutorial”</td>
+<td></td>
+</tr>
+<tr>
+<td>“The Semantic Web”</td>
+<td>23</td>
+</tr>
+</tbody>
+</table>
+<p><em>Tip:由查询结果我们可以发现，通过option对price的值进行限制，如果不满足那么在该列输出空内容，但保留内容为空的该元素的其他内容。</em></p>
+<p>下面的例子将阐述有两个OPTION内容这样会输出多个可选模型的查询内容:</p>
+<p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@prefix foaf:    &lt;http://xmlns.com/foaf/0.1/&gt; .</span><br><span class="line"></span><br><span class="line">_:a  foaf:name      &quot;Alice&quot;</span><br><span class="line">_:a  foaf:homepage  &lt;http://work.example.org/alice/&gt; .</span><br><span class="line"></span><br><span class="line">_:b  foaf:name      &quot;Bob&quot; .</span><br><span class="line">_:b  foaf:mbox      &lt;mailto:bob@work.example&gt; .</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PREFIX foaf:  &lt;http://xmlns.com/foaf/0.1/&gt; .</span><br><span class="line">SELECT ?name ?mbox ?hpage</span><br><span class="line">WHERE &#123;</span><br><span class="line">    ?x foaf:name ?name .</span><br><span class="line">    OPTIONAL &#123;?x foaf:mbox ?mbox&#125; .</span><br><span class="line">    OPTIONAL &#123;?x foaf:homepage ?hpage&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>mbox</th>
+<th>hpage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“Alice”</td>
+<td></td>
+<td><a href="http://work.example.org/alice/" target="_blank" rel="noopener">http://work.example.org/alice/</a></td>
+</tr>
+<tr>
+<td>“Bob”</td>
+<td><a href="mailto:bob@work.example" target="_blank" rel="noopener">mailto:bob@work.example</a></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="UNION实现多种图形模式的组合"><a href="#UNION实现多种图形模式的组合" class="headerlink" title="UNION实现多种图形模式的组合"></a>UNION实现多种图形模式的组合</h3><p>SPARQL上采用UNION关键字来实现多种图形模式的组合 如果只输出一列的化，它会将两个模式串联排列起来。</p>
+<p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@prefix dc10:   &lt;http://purl.org/dc/elements/1.0/&gt; .</span><br><span class="line">@prefix dc11:   &lt;http://purl.org/dc/elements/1.1/&gt; .</span><br><span class="line"></span><br><span class="line">_:a  dc10:title   &quot;SPARQL Query Language Tutorial&quot; .</span><br><span class="line">_:a  dc10:creator &quot;Alice&quot; .</span><br><span class="line"></span><br><span class="line">_:b  dcll:title    &quot;SPARQL Protocol Tutorial&quot; .</span><br><span class="line">_:b  dc11:creator  &quot;Bob&quot; .</span><br><span class="line"></span><br><span class="line">_:c  dc10:title    &quot;SPARQL&quot; .</span><br><span class="line">_:c  dc11:title    &quot;SPARQL (updated)&quot; .</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PREFIX dc10:   &lt;http://purl.org/dc/elements/1.0/&gt; .</span><br><span class="line">PREFIX dc11:   &lt;http://purl.org/dc/elements/1.1/&gt; .</span><br><span class="line"></span><br><span class="line">SELECT ?title</span><br><span class="line">WHERE  &#123;</span><br><span class="line">    &#123;?book dc10:title  ?title&#125;  UNION  &#123; ?book dc11:title ?title &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>title</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“SPARQL Protocol Tutorial”</td>
+</tr>
+<tr>
+<td>“SPARQL”</td>
+</tr>
+<tr>
+<td>“SPARQL (updated)”</td>
+</tr>
+<tr>
+<td>“SPARQL Query Language Tutorial”</td>
+</tr>
+</tbody>
+</table>
+<p>当将查询结果两列显示的话则会正常显示:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PREFIX dc10:   &lt;http://purl.org/dc/elements/1.0/&gt; .</span><br><span class="line">PREFIX dc11:   &lt;http://purl.org/dc/elements/1.1/&gt; .</span><br><span class="line"></span><br><span class="line">SELECT ?x ?y</span><br><span class="line">WHERE &#123;</span><br><span class="line">    &#123; ?book dc10:title ?x &#125;   UNION  &#123; ?book dc11:title ?y &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>x</th>
+<th>y</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>“SPARQL (updated)”</td>
+</tr>
+<tr>
+<td></td>
+<td>“SPARQL Protocol Tutorial”</td>
+</tr>
+<tr>
+<td>“SPARQL”</td>
+<td></td>
+</tr>
+<tr>
+<td>“SPARQL Query Language Tutorial”</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="FILTER过滤器中采用（NOT-EXISTS和EXISTS）来实现全面的过滤效果"><a href="#FILTER过滤器中采用（NOT-EXISTS和EXISTS）来实现全面的过滤效果" class="headerlink" title="FILTER过滤器中采用（NOT EXISTS和EXISTS）来实现全面的过滤效果"></a>FILTER过滤器中采用（NOT EXISTS和EXISTS）来实现全面的过滤效果</h3><p>在SPARQL中FILTER过滤器中采用（NOT EXISTS和EXISTS）来实现全面的过滤效果</p>
+<p>NOT EXISTS   表示筛选出查找得目标与数据集不匹配的项，并且给出查询的数据值，例如：</p>
+<p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@prefix   :     &lt;http://example/&gt; .</span><br><span class="line">@prefix   rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .</span><br><span class="line">@prefix   foaf:  &lt;http://xmlns.com/foaf/0.1/&gt; .</span><br><span class="line"></span><br><span class="line">:alice   rdf:type   foaf:Person .</span><br><span class="line">:alice   foaf:name  &quot;Alice&quot; .</span><br><span class="line">:bob     rdf:type   foaf:Person .</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PREFIX   rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; </span><br><span class="line">PREFIX   foaf:  &lt;http://xmlns.com/foaf/0.1/&gt; </span><br><span class="line"></span><br><span class="line">SELECT  ?person</span><br><span class="line">WHERE</span><br><span class="line">&#123;</span><br><span class="line">    ?person  rdf:type  foaf:Person .</span><br><span class="line">    FILTER NOT EXISTS &#123;?person foaf:name ?name&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>person</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://example/bob" target="_blank" rel="noopener">http://example/bob</a></td>
+</tr>
+</tbody>
+</table>
+<p>这里就输出匹配不上的项，bob在RDF图中没有相关name数据,相反EXISTS就会输出 匹配到的项。</p>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PREFIX   rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; </span><br><span class="line">PREFIX   foaf:  &lt;http://xmlns.com/foaf/0.1/&gt; </span><br><span class="line"></span><br><span class="line">SELECT  ?person</span><br><span class="line">WHERE</span><br><span class="line">&#123;</span><br><span class="line">    ?person  rdf:type  foaf:Person .</span><br><span class="line">    FILTER EXISTS &#123;?person foaf:name ?name&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>person</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://example/alice" target="_blank" rel="noopener">http://example/alice</a></td>
+</tr>
+</tbody>
+</table>
+<p>这时EXISTS就会找出匹配到的项。</p>
+<hr>
+<h3 id="MINUS"><a href="#MINUS" class="headerlink" title="MINUS"></a>MINUS</h3><p>SPARQL中另一种否定过滤筛选是另一种否定类型“MINUS”关键字，它对两个参数进行评估，删选出不满足与目标相匹配相的结果。例如：</p>
+<p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@prefix  :     &lt;http://example/&gt; .</span><br><span class="line">@prefix  foaf: &lt;http://xmlns.com/foaf/0.1/&gt; .</span><br><span class="line"></span><br><span class="line">:alice  foaf:givenName  &quot;Alice&quot; ;</span><br><span class="line">        foaf:familyName &quot;Smith&quot; .</span><br><span class="line">        </span><br><span class="line">:bob    foaf:givenName  &quot;Bob&quot; ;</span><br><span class="line">        foaf:familyName &quot;Jones&quot; .</span><br><span class="line">        </span><br><span class="line">:carol  foaf:givenName  &quot;Carol&quot; ;</span><br><span class="line">        foaf:familyName &quot;Smith&quot; .</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">PREFIX  :     &lt;http://example/&gt; </span><br><span class="line">PREFIX foaf:  &lt;http://xmlns.com/foaf/0.1/&gt;</span><br><span class="line"></span><br><span class="line">SELECT DISTINCT ?s</span><br><span class="line">WHERE &#123;</span><br><span class="line">    ?s ?p ?o .</span><br><span class="line">    MINUS &#123;</span><br><span class="line">        ?s foaf:givenName &quot;Bob&quot; .</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>s</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://example/carol" target="_blank" rel="noopener">http://example/carol</a></td>
+</tr>
+<tr>
+<td><a href="http://example/alice" target="_blank" rel="noopener">http://example/alice</a></td>
+</tr>
+</tbody>
+</table>
+<p>由查询结果可以看出，我们删选出不是BOB名的目标，distinct的目的是使重复的两个数据也只输出一个数据。</p>
+<hr>
+<h3 id="关于MINUS和NOT-EXISTS的区别"><a href="#关于MINUS和NOT-EXISTS的区别" class="headerlink" title="关于MINUS和NOT EXISTS的区别"></a>关于MINUS和NOT EXISTS的区别</h3><p>MINUS不会在自己语句中去与外界变量进行匹配,但NOT EXISTS会自行将语句中的变量与语句外的变量进行匹配操作。</p>
+<p>例如对于一个DATA集里的空标识数据:</p>
+<p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@prefix  :  &lt;http://example/&gt; .</span><br><span class="line">:a  :b  :c .</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SELECT *</span><br><span class="line">&#123;</span><br><span class="line">    ?s ?p ?o</span><br><span class="line">    FILTER NOT EXISTS &#123; ?x ?y ?z&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在查询语句中NOT EXISTS会将？x与？s进行匹配，这样查询的逻辑为查询其不存在的东西，逻辑上是矛盾的，所以查询结果为空。</p>
+<p>而MINUS则不会进行匹配，所以MINUS内的变量不指代数据集中的变量，所以MINUS内的变量存不存在对查询结果无影响。</p>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SELECT *</span><br><span class="line">&#123;</span><br><span class="line">    ?s ?p ?o</span><br><span class="line">    MINUS</span><br><span class="line">    &#123; ?x ?y ?z &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>s</th>
+<th>p</th>
+<th>o</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://example/a" target="_blank" rel="noopener">http://example/a</a></td>
+<td><a href="http://example/b" target="_blank" rel="noopener">http://example/b</a></td>
+<td><a href="http://example/c" target="_blank" rel="noopener">http://example/c</a></td>
+</tr>
+</tbody>
+</table>
+<p>另外在MINUS与NOT EXISTS，关于这个变量的作用域的还有个明显的区别。我们通过以下这个例子来看:</p>
+<p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@prefix : &lt;http://example.com./&gt; .</span><br><span class="line">:a :p 1 .</span><br><span class="line">:a :q 1 .</span><br><span class="line">:a :q 2 .</span><br><span class="line"></span><br><span class="line">:b :p 3.0 .</span><br><span class="line">:b :q 4.0 .</span><br><span class="line">:b :q 5.0 .</span><br></pre></td></tr></table></figure>
+<p>以上是我们例子中的数据集，由两个主语a和b。现在我们用NOT EXISTS来进行过滤:</p>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PREFIX : &lt;http://example.com/&gt;</span><br><span class="line">SELECT * WHERE &#123;</span><br><span class="line">    ?x :p ?n</span><br><span class="line">    FILTER NOT EXISTS &#123;</span><br><span class="line">        ?x :q ?m .</span><br><span class="line">        FILTER(?n = ?m)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Queru Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>x</th>
+<th>n</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://example.com/b" target="_blank" rel="noopener">http://example.com/b</a></td>
+<td>3.0</td>
+</tr>
+</tbody>
+</table>
+<p>查询结果很明显的现实，NOT EXISTS中？n作用域明显与FILETER上一行的？n对应，所以能正确过滤出q与p值不一样的数据。</p>
+<p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PREFIX :  &lt;http://example/&gt;</span><br><span class="line">SELECT * WHERE &#123;</span><br><span class="line">    ?x :p ?n</span><br><span class="line">    MINUS &#123;</span><br><span class="line">        ?x :q ?m .</span><br><span class="line">        FILTER( ?n = ?m )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>x</th>
+<th>n</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://example.com/b" target="_blank" rel="noopener">http://example.com/b</a></td>
+<td>3.0</td>
+</tr>
+<tr>
+<td><a href="http://example.com/a" target="_blank" rel="noopener">http://example.com/a</a></td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>而在MINUS里面其？n并未绑定，在这里面MINUS与MINUS上一行的？n并不一样，所以在此MINUS里 ？m是与一个随机的数进行的匹配。</p>
+<p>所以最后过滤的思路是，输出与？n不相同的主语；而由于？n是随机的，所以a 和b都不与之相等。</p>
+<hr>
+<h3 id="循环查询"><a href="#循环查询" class="headerlink" title="循环查询"></a>循环查询</h3><p>在SPARQL里提供了循环查询方式 通过 “/”来实现的循环操作:</p>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    ?x foaf:mbox  &lt;mailto:alice@example&gt; .</span><br><span class="line">    ?x foaf:knows/foaf:knows/foaf:name ?name .</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>等同于</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SELECT ?x ?name</span><br><span class="line">&#123;</span><br><span class="line">    ?x foaf:mbox  &lt;mailto:alice@example&gt; .</span><br><span class="line">    ?x foaf:knows [ foaf:knows [ foaf:name ?name ]].</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再换成我们看的懂的查询语句就是:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SELECT ?x ?name</span><br><span class="line">&#123;</span><br><span class="line">    ?x foaf:mbox &lt;mailto:alice@example&gt; .</span><br><span class="line">    ?x foaf:knows ?a1 .</span><br><span class="line">    ?a1 foaf:knows ?a2 .</span><br><span class="line">    ?a2 foaf:knows ?name /</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们来举个例子说明一下这个循环查询,原始数据为:</p>
+<p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@prefix :     &lt;http://example/&gt; .</span><br><span class="line"></span><br><span class="line">:order   :item  :z1 .</span><br><span class="line">:order   :item  :z2 .</span><br><span class="line"></span><br><span class="line">:z1  :name  &quot;Small&quot; .</span><br><span class="line">:z1  :price  5 .</span><br><span class="line"></span><br><span class="line">:z2  :name   &quot;Large&quot; .</span><br><span class="line">:z2  :price  5 .</span><br></pre></td></tr></table></figure>
+<p>我们用/来实现的循环查询操作:</p>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">PREFIX :   &lt;http://example/&gt;</span><br><span class="line">SELECT *</span><br><span class="line">&#123; ?s :item/:price ?x .&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>s</th>
+<th>x</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://example/order" target="_blank" rel="noopener">http://example/order</a></td>
+<td>5</td>
+</tr>
+<tr>
+<td><a href="http://example/order" target="_blank" rel="noopener">http://example/order</a></td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+<p>这样的查询语句类似于:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PREFIX :   &lt;http://example/&gt;</span><br><span class="line">SELECT *</span><br><span class="line">&#123; ?s :item ?a .</span><br><span class="line">?a :price ?x .&#125;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>s</th>
+<th>_a</th>
+<th>x</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://example/order" target="_blank" rel="noopener">http://example/order</a></td>
+<td><a href="http://example/z1" target="_blank" rel="noopener">http://example/z1</a></td>
+<td>5</td>
+</tr>
+<tr>
+<td><a href="http://example/order" target="_blank" rel="noopener">http://example/order</a></td>
+<td><a href="http://example/z2" target="_blank" rel="noopener">http://example/z2</a></td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+<p>现查询主语的标签，再根据标签去查询对应的价格最后输出。</p>
+<p>这样的循环操作 有这样一个例子可以来展示其循环效果，就是查询到有标签和价格同时存在的价格之和:</p>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PREFIX :    &lt;http://example/&gt;</span><br><span class="line">SELECT  (sum(?x) AS ?total)</span><br><span class="line">&#123;</span><br><span class="line">    :order :item/:price ?x</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="SPARQL里的BIND的使用方法"><a href="#SPARQL里的BIND的使用方法" class="headerlink" title="SPARQL里的BIND的使用方法"></a>SPARQL里的BIND的使用方法</h3><p>用BIND，可以将查询语句内的变量在BIND中进行数学运算并将运算的结果分配给变量，但是这样新引入的变量不能重新作为查询变量来用，不过可以作为限制条件来采用。</p>
+<p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@prefix  dc:   &lt;http://purl.org/dc/elements/1.1/&gt; .</span><br><span class="line">@prefix :      &lt;http://example.org/book/&gt; .</span><br><span class="line">@prefix  ns:   &lt;http://example.org/ns#&gt; .</span><br><span class="line"></span><br><span class="line">:book1 dc:title    &quot;SPARQL  Tutorial&quot; .</span><br><span class="line">:book1 ns:price    42 .</span><br><span class="line">:book1 ns:discount 0.2 .</span><br><span class="line"></span><br><span class="line">:book2 dc:title    &quot;The Semantic Web&quot; .</span><br><span class="line">:book2 ns:price    23 .</span><br><span class="line">:book2 ns:discount 0.25 .</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">PREFIX  dc:   &lt;http://purl.org/dc/elements/1.1/&gt; </span><br><span class="line">PREFIX  ns:   &lt;http://example.org/ns#&gt; </span><br><span class="line"></span><br><span class="line">SELECT ?title ?price</span><br><span class="line">&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        ?x ns:price ?p .</span><br><span class="line">        ?x ns:discount ?discount .</span><br><span class="line">        BIND (?p*(1-?discount) AS ?price)</span><br><span class="line">    &#125;</span><br><span class="line">    &#123;?x dc:title ?title . &#125;</span><br><span class="line">    FILTER(?price &lt;20)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>title</th>
+<th>price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The Semantic Web”</td>
+<td>17.25</td>
+</tr>
+</tbody>
+</table>
+<p>该语句的目的即为通过BIND方式来实现利润运算，通过收入减去支持百分百得到的利润price。</p>
+<hr>
+<h3 id="GROUP-BY-与HAVING的用法"><a href="#GROUP-BY-与HAVING的用法" class="headerlink" title="GROUP BY 与HAVING的用法"></a>GROUP BY 与HAVING的用法</h3><p>GROUP BY可以通过根据一个或多个表达式对查询的解决方案进行分组；</p>
+<p>HAVING必须要配套GOURP BY来使用（在与GROUP BY中类似FILETER的作用）进行过滤。</p>
+<p>下面一个例子将展示有若干本书，每本书都有作者，链接域名，和每本书的价格。我们通过GROUP BY以域名的方式进行分组，并计算每组下面的总价格：</p>
+<p><strong><em>Data:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@prefix :  &lt;http://books.example/&gt; .</span><br><span class="line"></span><br><span class="line">:org1   :affiliates  :auth1, :auth2 .</span><br><span class="line">:auth1  :writesBook :book1, :book2 .</span><br><span class="line">:book1  :price  9 .</span><br><span class="line">:book2  :price  5 .</span><br><span class="line">:auth2  :writesBook  :book3 .</span><br><span class="line">:book3  :price  7 .</span><br><span class="line">:org2   :affiliates  :auth3 .</span><br><span class="line">:auth3  :writesBook  :book4 .</span><br><span class="line">:book4  :price  7 .</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PREFIX  : &lt;http://books.example/&gt;</span><br><span class="line">SELECT (SUM(?lprice) AS ?totalPrice)</span><br><span class="line">WHERE &#123;</span><br><span class="line">    ?org :affiliates ?auth .</span><br><span class="line">    ?auth :writesBook ?book .</span><br><span class="line">    ?book :price ?lprice .</span><br><span class="line">&#125;</span><br><span class="line">GROUP BY ?org</span><br><span class="line">HAVING (SUM(?lprice) &gt; 10)</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>totalPrice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>21</td>
+</tr>
+</tbody>
+</table>
+<p>再举一个例子如果想对数据集中( {?x→2, ?y→3}, {?x→2, ?y→5}, {?x→6, ?y→7} )我们对x相同值得进行分组，并求出每组得y的平均值，我们可以采用以下方式：</p>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SELECT (AVG(?y) AS ?avg)</span><br><span class="line">WHERE &#123;</span><br><span class="line">    ?a :x ?x ;</span><br><span class="line">       :y ?y .</span><br><span class="line">&#125;</span><br><span class="line">GROUP BY ?x</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="SPARQL中嵌套的子查询"><a href="#SPARQL中嵌套的子查询" class="headerlink" title="SPARQL中嵌套的子查询"></a>SPARQL中嵌套的子查询</h3><p>子查询是在其他查询中内嵌SPARQL查询的一种方式，通常用于实现无法实现的结果，例如在限制的查询结果中查询出某些子图的信息。例如：</p>
+<p><strong><em>Query:</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">PREFIX :   &lt;http://people.example/&gt;</span><br><span class="line"></span><br><span class="line">SELECT ?y ?minName</span><br><span class="line">WHERE &#123;</span><br><span class="line">    :alice :knows ?y .</span><br><span class="line">    &#123;</span><br><span class="line">        SELECT ?y (MIN(?name) AS ?minName)</span><br><span class="line">        WHERE &#123;</span><br><span class="line">            ?y :name ?name .</span><br><span class="line">        &#125; GROUP BY ?y</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>Query Result:</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>y</th>
+<th>minName</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:bob</td>
+<td>“B.Bar”</td>
+</tr>
+<tr>
+<td>:carol</td>
+<td>“C.Baz”</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="morning sunflowers wechat" style="width: 200px; max-width: 100%;">
+    <div>欢迎一起交流～</div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SPARQL/" rel="tag"><i class="fa fa-tag"></i> SPARQL</a>
+          
+            <a href="/tags/Jena/" rel="tag"><i class="fa fa-tag"></i> Jena</a>
+          
+            <a href="/tags/知识图谱/" rel="tag"><i class="fa fa-tag"></i> 知识图谱</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/29/BFS算法（详细C）/" rel="next" title="BFS算法（详细C）">
+                <i class="fa fa-chevron-left"></i> BFS算法（详细C）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/14/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjA5NC8xMjYyOQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/lj.gif" alt="morning sunflowers">
+            
+              <p class="site-author-name" itemprop="name">morning sunflowers</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/" target="_blank" title="新浪微博">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>新浪微博</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/m0_37286282/" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#匹配查询：查询RDF图数据中既包含名字也包含邮箱的人"><span class="nav-number">1.</span> <span class="nav-text">匹配查询：查询RDF图数据中既包含名字也包含邮箱的人</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具有数据类型限制的查询"><span class="nav-number">2.</span> <span class="nav-text">具有数据类型限制的查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#空白节点标签的查询"><span class="nav-number">3.</span> <span class="nav-text">空白节点标签的查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查询语句的返回结果使用表达式拼接"><span class="nav-number">4.</span> <span class="nav-text">查询语句的返回结果使用表达式拼接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过用正则化的方式来匹配查询某一结果"><span class="nav-number">5.</span> <span class="nav-text">通过用正则化的方式来匹配查询某一结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过FILTER来做算术运算的限制操作"><span class="nav-number">6.</span> <span class="nav-text">通过FILTER来做算术运算的限制操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#符号说明"><span class="nav-number">7.</span> <span class="nav-text">符号说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组图模式"><span class="nav-number">8.</span> <span class="nav-text">组图模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Optional–考虑的限制关系"><span class="nav-number">9.</span> <span class="nav-text">Optional–考虑的限制关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UNION实现多种图形模式的组合"><span class="nav-number">10.</span> <span class="nav-text">UNION实现多种图形模式的组合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FILTER过滤器中采用（NOT-EXISTS和EXISTS）来实现全面的过滤效果"><span class="nav-number">11.</span> <span class="nav-text">FILTER过滤器中采用（NOT EXISTS和EXISTS）来实现全面的过滤效果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MINUS"><span class="nav-number">12.</span> <span class="nav-text">MINUS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于MINUS和NOT-EXISTS的区别"><span class="nav-number">13.</span> <span class="nav-text">关于MINUS和NOT EXISTS的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#循环查询"><span class="nav-number">14.</span> <span class="nav-text">循环查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SPARQL里的BIND的使用方法"><span class="nav-number">15.</span> <span class="nav-text">SPARQL里的BIND的使用方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GROUP-BY-与HAVING的用法"><span class="nav-number">16.</span> <span class="nav-text">GROUP BY 与HAVING的用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SPARQL中嵌套的子查询"><span class="nav-number">17.</span> <span class="nav-text">SPARQL中嵌套的子查询</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+
+    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="210" src="//music.163.com/outchain/player?type=0&id=2695278820&auto=1&height=430"></iframe>
+    
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">morning sunflowers</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站访客总量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
